@@ -2,17 +2,16 @@ Package: rnmf
 Type: Package
 Title: Performs robust non-negative matrix factorizaion with (optional)
     penalized terms.
-Description: To be finished.
+Description: To be updated.
 Version: 0.1.0
-Author: Yifan Xu, collaboration with Jiayang Sun
+Author: Yifan Xu, Jiayang Sun
 Maintainer: Yifan Xu <yxx218@case.edu>
 Depends:
-    R (>= 3.0.0),
+    R (>= 3.0.1),
     nnls,
     combinat,
     tcltk,
     plyr,
-    knitr
 VignetteBuilder: knitr
 License: # getOptions('devtools.desc.license')
 LazyData: true
