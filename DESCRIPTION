@@ -9,11 +9,9 @@ Maintainer: Yifan Xu <yxx218@case.edu>
 Depends:
     R (>= 2.14.0),
     nnls,
-    combinat,
-    tcltk,
     plyr,
 VignetteBuilder: knitr
-License:GPL(>=2)
+License: GPL(>=2)
 LazyData: true
 Collate:
     'Nnls.R'

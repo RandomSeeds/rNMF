@@ -94,11 +94,11 @@ Tumor.corrupted = Tumor
 Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
 ## Do rnmf with different settings
 res.rnmf1 = rnmf(Tumor.corrupted, trim = FALSE)
-res.rnmf2 = rnmf(Tumor.corrupted, tol = 0.001, trim = 0.05)
-res.rnmf3 = rnmf(Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.05, my.seed = 123, variation = "smooth")
+res.rnmf2 = rnmf(Tumor.corrupted, tol = 0.001, trim = 0.06)
+res.rnmf3 = rnmf(Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 123, variation = "smooth")
 par(mfrow = c(2,2))
 image(Tumor.corrupted, main = "Corrupted")
-image(res.rnmf1$fit, main = "rnmf (cell) fit ")
+image(res.rnmf1$fit, main = "rnmf (no trimming) fit")
 image(res.rnmf2$fit, main = "rnmf (smooth) fit 2")
 image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
 }

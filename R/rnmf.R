@@ -1,4 +1,4 @@
-#' #' Performs robust non-negative matrix factorization.
+#' Performs robust non-negative matrix factorization.
 #' 
 #' Performs robust penalized non-negative matrix factorizaion on a non-negative
 #' matrix A to obtain W and H, such that A ~= W %*% H,  where A is a p by n matrix, W is a p by k matrix
@@ -6,7 +6,6 @@
 #' Here we assume each row of a represent a feature/variable, and each column of A is an observation/sample.
 #' The objective function is ||A - W\%*\%H||_{trimmed} + alpha * ||W||_2^2 + beta * sum|H[:,j]|^2. The minimization process is a generalized alternating least square method.
 #' 
-#'
 #' @param A A non-negative numerical matrix. The input non-negative matrix to be decomposed into W \%*\% H.
 #' @param k A non-negative integer. The number of columns of W. 
 #' @param alpha Non-negative number. Controls ||W||_2^2.
@@ -45,11 +44,11 @@
 #' Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
 #' ## Do rnmf with different settings
 #' res.rnmf1 = rnmf(Tumor.corrupted, trim = FALSE)
-#' res.rnmf2 = rnmf(Tumor.corrupted, tol = 0.001, trim = 0.05)
-#' res.rnmf3 = rnmf(Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.05, my.seed = 123, variation = "smooth")
+#' res.rnmf2 = rnmf(Tumor.corrupted, tol = 0.001, trim = 0.06)
+#' res.rnmf3 = rnmf(Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 123, variation = "smooth")
 #' par(mfrow = c(2,2))
 #' image(Tumor.corrupted, main = "Corrupted")
-#' image(res.rnmf1$fit, main = "rnmf (cell) fit ")
+#' image(res.rnmf1$fit, main = "rnmf (no trimming) fit")
 #' image(res.rnmf2$fit, main = "rnmf (smooth) fit 2")
 #' image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
 
@@ -177,18 +176,18 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.01,
         return(J)
     }
     
-    ## This function reorders (permutes) two matrices A and B which have the same shape so that their column structures are as similar as possible. The output value is the permutation order for the second matrix.
-    ## WARNING: this function is slow!!
-    ## NOTE: Currently not enabled in the main function "rNMF".
-    per = function(A,B){
-        fun1 = function(x){
-            sum(apply(A - B[,x], 2, l2))
-        }
-        m = ncol(A)
-        per = permn(m)
-        diff = lapply(per, fun1)
-        return(per[[which.min(diff)]])
-    }
+    ## ## This function reorders (permutes) two matrices A and B which have the same shape so that their column structures are as similar as possible. The output value is the permutation order for the second matrix.
+    ## ## WARNING: this function is slow!!
+    ## ## NOTE: Currently not enabled in the main function "rNMF".
+    ## per = function(A,B){
+    ##     fun1 = function(x){
+    ##         sum(apply(A - B[,x], 2, l2))
+    ##     }
+    ##     m = ncol(A)
+    ##     per = permn(m)
+    ##     diff = lapply(per, fun1)
+    ##     return(per[[which.min(diff)]])
+    ## }
     
     ## "find.row" takes the (x,y) coordinates in A in the format xypair = c(x,y), and returns the corresponding row index of v.
     ## "find.x" takes the index of v, and returns the x coordinator in A.
@@ -511,9 +510,4 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.01,
     }
     return(invisible(list(W = W, H = H, fit = fit, trimmed1 = to.trim1, trimmed2 = to.trim2, SS = SS, niter = i)))
 }
-
-## Example:
-## res = RNMF(A, k, alpha = 0, beta = 0, maxit = 50, trim = 0.05, ini.H = NULL, my.seed = NULL, variation = "cellcol"){
-
-
 

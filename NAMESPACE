@@ -1,3 +1,2 @@
 export(Nnls)
 export(rnmf)
-import(nnls,combinat,tcltk,plyr)
