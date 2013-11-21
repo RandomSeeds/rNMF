@@ -5,7 +5,7 @@
 \title{rnmf}
 \usage{
   rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50,
-    tol = 0.005, trim = FALSE, ini.H = NULL, ini.W = NULL,
+    tol = 0.005, trim = FALSE, ini.W = NULL, ini.H = NULL,
     ini.zeta = NULL, my.seed = NULL, variation = "cell",
     quiet = FALSE, nreg = 1, p1 = NA, n1 = NA)
 }
@@ -78,7 +78,7 @@
   H, such that A ~= W %*% H, where A is a p by n matrix, W
   is a p by k matrix and H is a k by n matrix. Outliers in
   A are detected and trimmed (by cells, columns or rows,
-  see details). Here we assume each row of a represent a
+  see details). Here we assume each row of A represents a
   feature/variable, and each column of A is an
   observation/sample. The objective function is ||A -
   W\%*\%H||_{trimmed} + alpha * ||W||_2^2 + beta *
@@ -90,11 +90,12 @@
 data("Tumor")
 ## Add 5\% corruptions.
 Tumor.corrupted = Tumor
+set.seed(1)
 Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
 ## Do rnmf with different settings
-res.rnmf1 = rnmf(Tumor.corrupted, trim = FALSE)
-res.rnmf2 = rnmf(Tumor.corrupted, tol = 0.001, trim = 0.06)
-res.rnmf3 = rnmf(Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 123, variation = "smooth")
+res.rnmf1 = rnmf(A = Tumor.corrupted, trim = FALSE, my.seed = 1)
+res.rnmf2 = rnmf(A = Tumor.corrupted, tol = 0.001, trim = 0.06, my.seed = 1)
+res.rnmf3 = rnmf(A = Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 1, variation = "smooth")
 par(mfrow = c(2,2))
 image(Tumor.corrupted, main = "Corrupted")
 image(res.rnmf1$fit, main = "rnmf (no trimming) fit")

@@ -1,5 +1,4 @@
-checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.H, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p1, n1){
-
+checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p1, n1){
     if(!is.matrix(A)) {stop("The input A is not a matrix. Consider as.matrix(A)?")}
     if(!is.numeric(A)) {stop("The input A is not a numeric matrix.")}
     if(!all(A >= 0)) {stop("Not all entries are non-negative.")}
@@ -17,9 +16,9 @@ checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.H, ini.W, ini.zeta
         if(sum(c(!ini.zeta)) > round(trim * p * n)) {stop("ini.zeta contains too many FALSES (outliers); Increase trimming percentage?")}
     }
     if(!is.null(my.seed)){
-        if(length(my.seed) != 1 | !is.wholenumber(my.seed) | my.seed <= 0) {stop("Something is wrong about my.seed. It should be a positive integer.")}
+        if(length(my.seed) != 1 | !is.numeric(my.seed) | !is.wholenumber(my.seed) | my.seed <= 0) {stop("Something is wrong about my.seed. It should be a positive integer.")}
     }
     if(length(variation) != 1 | !is.character(variation) | !(variation %in% c('col', 'row', 'cell', 'smooth', 'row', 'rowsmooth'))) {stop("Argument variation must be one of the following strings 'col', 'row', 'cell', 'smooth', 'row' or 'rowsmooth'")}
     if(length(quiet) != 1 | !is.logical(quiet)) {stop("The argument 'quiet' must be logical.")}
-    if(length(nreg) != 1 | !is.wholenumber(nreg) | nreg <= 0) {stop("The argument 'nreg' must be a positive ineger.")}
+    if(length(nreg) != 1 | !is.numeric(nreg) | !is.wholenumber(nreg) | nreg <= 0) {stop("The argument 'nreg' must be a positive ineger.")}
 }
