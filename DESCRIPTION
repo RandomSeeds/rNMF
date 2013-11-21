@@ -28,3 +28,5 @@ Collate:
     'l2.R'
     'nmlz.R'
     'smoothing2.R'
+    'checkargs.R'
+    'is.wholenumber.R'

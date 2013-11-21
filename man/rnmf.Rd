@@ -5,7 +5,7 @@
 \title{rnmf}
 \usage{
   rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50,
-    tol = 0.01, trim = FALSE, ini.H = NULL, ini.W = NULL,
+    tol = 0.005, trim = FALSE, ini.H = NULL, ini.W = NULL,
     ini.zeta = NULL, my.seed = NULL, variation = "cell",
     quiet = FALSE, nreg = 1, p1 = NA, n1 = NA)
 }

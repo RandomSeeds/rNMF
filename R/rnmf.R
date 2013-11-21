@@ -51,15 +51,12 @@
 #' image(res.rnmf2$fit, main = "rnmf (smooth) fit 2")
 #' image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
 
-rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.01,
+rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
     trim = FALSE, ini.H = NULL, ini.W = NULL, ini.zeta = NULL, my.seed = NULL,
     variation = "cell", quiet = FALSE, nreg = 1, p1 = NA, n1 = NA)
 {
     tic = proc.time()
-    if(!is.matrix(A)) {stop("The input is not a matrix. Consider as.matrix(A)?")}
-    if(length(k) != 1) {stop("Something is wrong about k. It should be a positive integer.")}
-    if(trim < 0 || trim > 1) {stop("Argument 'trim' must be a value in [0,1), or 'FALSE'.")}
-    if(alpha < 0 || beta < 0) {stop("Argument 'alpha' and 'beta' must be non-negative.")}
+    checkargs(A, k, alpha, beta, maxit, tol, trim, ini.H, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p1, n1)
     p = nrow(A)
     n = ncol(A)
     A.f = data.frame(value = as.vector(A), x = rep(1:p, n), y = rep(1:n, each = p), outs = FALSE)
@@ -284,6 +281,7 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.01,
             }
             ##J = nmlz(W) # Find the normalizing matrix of W
             ##W = W %*% J; H = solve(J) %*% H
+            
             ## Convergence?
             if(i > 1){
                 if(setequal(to.trim1[[i]], to.trim1[[i-1]])){
@@ -295,10 +293,10 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.01,
     }
     ## Close the link to the progress bar. 
     close(pb)
+    
     fit = W %*% H
-    if(quiet == TRUE){
-    }else{
-        if(trim == FALSE){
+    if(!quiet){
+        if(!trim){
             cat("Done. Time used:","\n")
             print(proc.time() - tic)
             cat("No trimming.\n",
