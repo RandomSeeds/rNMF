@@ -67,8 +67,7 @@
   "fit": W \%*\% H. "trimmed1": A list of locations of
   trimmed cells after stage one in each iteration. (to be
   updated) "trimmed2": A list of locations of trimmed cells
-  after stage two in each iteration. (to be updated) "SS":
-  Sum of squares of the difference. (to be updated)
+  after stage two in each iteration. (to be updated)
   "niter": Number of iterations performed.
 }
 \description{
