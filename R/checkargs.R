@@ -7,7 +7,9 @@ checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.W, ini.zeta, my.se
     if(length(beta) != 1 | !is.numeric(beta) | beta < 0) {stop("Argument 'beta' must be non-negative.")}
     if(length(maxit) != 1 | !is.wholenumber(maxit) | maxit <= 0) {stop("Something is wrong about maxit. It should be a positive integer.")}
     if(length(tol) != 1 | !is.numeric(tol) | tol < 0 | tol > 1) {stop("tol must be a number in [0,1)")}
-    if((length(trim) != 1 | !is.logical(trim) | trim) & (length(trim) != 1 | !is.numeric(trim) | trim < 0 | trim > 1)) {stop("Argument 'trim' must be a number in [0,1), or 'FALSE'.")}
+    if(trim != FALSE){
+        if(length(trim) != 1 | !is.numeric(trim) | trim < 0 | trim > 1) {stop("Argument 'trim' must be a number in [0,1), or 'FALSE'.")}
+    }
     if(!is.null(ini.W)){
         if(!is.matrix(ini.W) | !is.numeric(ini.W) | !all(ini.W >= 0) | nrow(ini.W) != nrow(A) | ncol(ini.W) != k){stop("ini.W must be a p by k non-negative numeric matrix.")}
     }
