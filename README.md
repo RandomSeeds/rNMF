@@ -5,22 +5,30 @@ robust NMF (under construction)
 
 To install, and load the package, do the following.
 
+In R console, install dependent packages (the dependent packages cannot be automatically installed because “rnmf” is local):
 
-0. In R console, install dependent packages (the dependent packages cannot be automatically installed because “rnmf” is local):
+```
+install.packages(c("nnls", "plyr"))
+```
+In R console, run the following:
 
-> install.packages(c("nnls", "plyr"))
+```
+install.packages("/Path to the package/rnmf_0.1.0.1tar.gz", repos = NULL, type = "source")
+```
+RESTART R. On my machine, the help files including examples do not show correctly before R is restarted.
 
-1. In R console, run
-> install.packages("/Path to the package/rnmf_0.1.0.tar.gz", repos = NULL, type = "source")
-change "Path to the package" to the path to the “rnmf_0.1.0.tar.gz” file.
+Run
 
-1.5. RESTART R. On my machine, the help files including examples do not show correctly before R is restarted.
+```
+library("rnmf")
+```
+To see the help of the main function, do
 
-2. Run
-> library("rnmf")
+```
+?rnmf
+```
+To see an example, do
 
-3. To see the help of the main function, do
-> ?rnmf
-
-4. To see an example, do
-> example(rnmf)
+```
+example(rnmf)
+```
