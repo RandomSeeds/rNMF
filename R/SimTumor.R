@@ -22,27 +22,27 @@ simtum = function(num.tum = 3, width = 70, height = 70, radius.l = 4, radius.u =
     return(invisible(tum$pixel))
 }
 
-image(matrix(simtum(),70))
+## image(matrix(simtum(),70))
     
-## -----------------------------------
-## Simulate Tumor with different tumor locations and outlier locations.
-## -----------------------------------
-tum.multiple = replicate(1000, simtum())
-tum.multiple.o = tum.multiple
+## ## -----------------------------------
+## ## Simulate Tumor with different tumor locations and outlier locations.
+## ## -----------------------------------
+## tum.multiple = replicate(1000, simtum())
+## tum.multiple.o = tum.multiple
 
-add.outliers = function(x, value = 1, per = 0.05){
-    x[sample(1:length(x), (per * length(x)))] = value
-    return(x)
-}
+## add.outliers = function(x, value = 1, per = 0.05){
+##     x[sample(1:length(x), (per * length(x)))] = value
+##     return(x)
+## }
 
-tum.multiple = apply(tum.multiple.o,2,add.outliers)
+## tum.multiple = apply(tum.multiple.o,2,add.outliers)
 
-tumors = list(NA, 1000)
-for(i in 1:1000){
-    tumors[[i]] = list(original = matrix(tum.multiple.o[,i],70,70), corrupt = matrix(tum.multiple[,i],70,70))
-}
+## tumors = list(NA, 1000)
+## for(i in 1:1000){
+##     tumors[[i]] = list(original = matrix(tum.multiple.o[,i],70,70), corrupt = matrix(tum.multiple[,i],70,70))
+## }
 
-save.image("tumors.Rdata")
+## save.image("tumors.Rdata")
 
 
 

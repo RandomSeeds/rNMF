@@ -3,7 +3,7 @@ Type: Package
 Title: Performs robust non-negative matrix factorizaion with (optional)
     penalized terms.
 Description: To be updated.
-Version: 0.1.0
+Version: 0.1.0.1
 Author: Yifan Xu, Jiayang Sun
 Maintainer: Yifan Xu <yxx218@case.edu>
 Depends:
@@ -30,3 +30,5 @@ Collate:
     'smoothing2.R'
     'checkargs.R'
     'is.wholenumber.R'
+    'SimTumor.R'
+    'seq.R'
