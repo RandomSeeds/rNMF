@@ -1,6 +1,6 @@
-#' Generates files containing sequential plotting of results of rNMF. 
+#' Generates files containing sequential plots of results of rNMF. 
 #' 
-#' The files contain images of rNMF reconstructions with subsets of basis vectors in W (and corresponding vectors in H). Let k be the number of columns of W. 'seq.plot' will generates 2k graphs in one or more png files. The first k graphs are W[,u] %*% H[u,], u = 1,..,k. The next k graphs are W[,(u1,u2)] %*% H[(u1,u2),], (u1,u2) = (1,2),...,(k-1,k), (k,1). The basis vectors in W are ordered by the range of values in them. 
+#' This function takes the result of the 'rnmf' function (a list), and generate files containing sequential plots of reconstructed matrices with 1 and 2 basis vectors. To be more specific, let k be the number of columns of W, k >= 2. 'seq.plot' will generate 2k graphs in one or more png files. The first k images are W[,u] %*% H[u,], u = 1,..,k. The next k images are W[,(u1,u2)] %*% H[(u1,u2),], (u1,u2) = (1,2),...,(k-1,k), (k,1). The basis vectors in W are ordered by the range of values in them. 
 #' 
 #' @param res A list, result from the 'rnmf()' function.
 #' @param width Width of the page(s).
