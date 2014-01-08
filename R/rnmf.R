@@ -56,22 +56,22 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
     trim = FALSE, ini.W = NULL, ini.H = NULL,  ini.zeta = NULL, my.seed = NULL,
     variation = "cell", quiet = FALSE, nreg = 1, p1 = NA, n1 = NA)
 {
-    tic = proc.time()
-    ## This function checks if the arguments are valid. 
+    tic = proc.time() ## Start a clock.
+    ## This function checks if the arguments are valid. If any of them are not valid, display an error message.
     checkargs(A, k, alpha, beta, maxit, tol, trim, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p1, n1)
     p = nrow(A)
     n = ncol(A)
-    A.f = data.frame(value = as.vector(A), x = rep(1:p, n), y = rep(1:n, each = p), outs = FALSE)
+    ## Create a data frame contains value = cell values of A; (x,y) = coordinates; outs = is it an outlier?
+    A.f = data.frame(value = as.vector(A), x = rep(1:p, n), y = rep(1:n, each = p), outs = FALSE) 
     if(trim > 0){
         to.trim1 = vector("list", maxit)
-        to.trim1 = vector("list", maxit)
+        ##to.trim2 = vector("list", maxit)
     }else{
         to.trim1 = NULL
-        to.trim1 = NULL
+        ##to.trim2 = NULL
     }
-    ## Initialization.
+    
     ## Initialize W
-    ## With mode = "cell", W instead of H as the first step. 
     if(missing(ini.W)){
         if(missing(my.seed)){
             W = initM(large = max(A), nrow = p, ncol = k, small = 0)
@@ -79,32 +79,16 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
             W = initM(large = max(A), nrow = p, ncol = k, small = 0, my.seed = my.seed)
         }
     }else{
-        if(!is.matrix(ini.W)) {stop("ini.W must be a matrix.")}
-        if(nrow(ini.W) != p || ncol(ini.W) != k) {stop("ini.W has the wrong dimension!.")}
         W = ini.W
     }
-    ## ## Initialize H.
-    ## if(missing(ini.H)){
-    ##     if(missing(my.seed)){
-    ##         H = initM(large = max(A), nrow = k, ncol = n, small = 0)
-    ##     }else{
-    ##         H = initM(large = max(A), nrow = k, ncol = n, small = 0, my.seed = my.seed)
-    ##     }
-    ## }else{
-    ##     if(!is.matrix(ini.H)) {stop("ini.H must be a matrix.")}
-    ##     if(nrow(ini.H) != k || ncol(ini.H) != n) {stop("ini.H has the wrong dimension!.")}
-    ##     H = ini.H
-    ## }
     ## The following line creates a progress bar.
-    pb <- txtProgressBar(min = 0, max = maxit, style = 3)
-    obj = 1
+    pb = txtProgressBar(min = 0, max = maxit, style = 3)
+    obj = 1 ## 'obj' is a vector containing values of the objective function used in corresponding "variations".
     if(variation == "cell" & trim > 0){
-        ## zeta denotes points to be kept
-        zeta.allTRUE <- matrix(TRUE, nrow = p, ncol = n)
+        ## Initialize zeta
+        ## zeta is a logic matrix which has the same size as A, indicating cells to be kept (non-outliers)
+        zeta.allTRUE = matrix(TRUE, nrow = p, ncol = n)
         if(!missing(ini.zeta)){
-            if(!is.logical(ini.zeta)) {stop("ini.zeta must be a logical matrix.")}
-            if(nrow(ini.zeta) != p || ncol(ini.zeta) != n) {stop("ini.zeta has the wrong dimension. dim(ini.zeta) should be the same as dim(X).")}
-            if(sum(c(!ini.zeta)) > round(trim * p * n)) {stop("ini.zeta contains too many FALSES (outliers); Increase trimming percentage?")}
             if(sum(c(!ini.zeta)) < round(trim * p * n)) {
                 warning("ini.zeta contains too few FALSES (outliers); other outliers are randomly picked.")
                 need.to.fill = round(trim * p * n) - sum(c(!ini.zeta))
@@ -117,6 +101,8 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
             zeta = zeta.allTRUE
             zeta[sample(1:(p * n), round(trim * p * n), replace = FALSE)] = FALSE ## randomize zeta
         }
+
+        ## Start iterations.
         for(i in 1:maxit){
             setTxtProgressBar(pb, i) ## update the progress bar
             ##------Stage 1------##
