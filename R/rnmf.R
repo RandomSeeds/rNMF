@@ -62,15 +62,15 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
     p = nrow(A)
     n = ncol(A)
     ## Create a data frame contains value = cell values of A; (x,y) = coordinates; outs = is it an outlier?
-    A.f = data.frame(value = as.vector(A), x = rep(1:p, n), y = rep(1:n, each = p), outs = FALSE) 
+    A.f = data.frame(value = as.vector(A), x = rep(1 : p, n), y = rep(1 : n, each = p), outs = FALSE) 
     if(trim > 0){
         to.trim1 = vector("list", maxit)
         ##to.trim2 = vector("list", maxit)
-    }else{
+    }
+    else{
         to.trim1 = NULL
         ##to.trim2 = NULL
     }
-    
     ## Initialize W
     if(missing(ini.W)){
         if(missing(my.seed)){
@@ -103,47 +103,49 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
         }
 
         ## Start iterations.
-        for(i in 1:maxit){
+        for(i in 1 : maxit){
             setTxtProgressBar(pb, i) ## update the progress bar
             ##------Stage 1------##
             ## Fit H
             H = Nnls.trimH(W, A, zeta, beta, k, n)
             for(j in 1:nreg){
                 ## Find residuals
-                R = (A - W %*% H)^2 
-                to.trim1[[i]] = which(rank(R) > round((1 - trim) * n * p))
+                R = (A - W %*% H)^2
+                to.trim1[[i]] = order(R, decreasing = TRUE)[1 : round(trim * n * p)]
+                ## to.trim1[[i]] = which(rank(R) > round((1 - trim) * n * p))
                 ## Update zeta
                 zeta = zeta.allTRUE
                 zeta[to.trim1[[i]]] = FALSE
                 ## Refit H
                 H = Nnls.trimH(W, A, zeta, beta, k, n)
             }
+            
             ##------Stage 2------##
             ## Fit W
             W = Nnls.trimW(H, A, zeta, alpha, p1, n1, k, p)
-            for(j in 1:nreg){
+            for(j in 1:nreg) {
                 ## Find residuals
-                ## browser()
                 R = (A - W %*% H)^2
-                to.trim1[[i]] = which(rank(R) > round((1 - trim) * n * p))
+                ##to.trim1[[i]] = which(rank(R) > round((1 - trim) * n * p))
+                to.trim1[[i]] = order(R, decreasing=TRUE)[1 : round(trim * n * p)]
                 ## Update zeta
                 zeta = zeta.allTRUE
                 zeta[to.trim1[[i]]] = FALSE
                 ## Refit W
                 W = Nnls.trimW(H, A, zeta, alpha, p1, n1, k, p)
-                J = nmlz(W) # Find the normalizing matrix of W
-                W = W %*% J; H = solve(J) %*% H
+                ## J = nmlz(W) # Find the normalizing matrix of W
+                ## W = W %*% J; H = solve(J) %*% H
             }
             obj[i] = l2((A - W %*% H)[zeta]) + l2(W) + sum(colSums(abs(H))^2)
             if(i > 1){
-                if(all(to.trim1[[i]] == to.trim1[[i-1]]) & sum((W - W.prev)^2)/sum(W.prev^2) < tol) break
+                if(all(to.trim1[[i]] == to.trim1[[i - 1]]) & sum((W - W.prev)^2)/sum(W.prev^2) < tol) break
             }
             W.prev = W
         }
     }else{
         for(i in 1:maxit){
             flag = FALSE
-            setTxtProgressBar(pb, i) # update the progress bar
+            setTxtProgressBar(pb, i)  # update the progress bar
             ## Iteration stage 1. Estimate H. ||MH - C||
             C = rbind(A, matrix(0,1,n))
             M = rbind(W, sqrt(beta) * matrix(1, 1, k))
@@ -151,7 +153,7 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
             if(trim > 0){
                 R = (A - W %*% H)^2
                 if(variation == "col" | variation == "cellcol"){
-                    ## No change
+                    # No change here
                 }else if(variation == "cellrow" | variation == "cellall"){
                     to.trim1[[i]] = which(rank(abs(R)) > round((1 - trim) * n * p))
                     trim.row = unique(to.trim1[[i]] %% p)
@@ -306,6 +308,7 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
                 )
         }
     }
-    return(invisible(list(W = W, H = H, fit = fit, trimmed1 = to.trim1, trimmed2 = to.trim1, niter = i)))
+    return(invisible(list(W = W, H = H, fit = fit,
+                          trimmed1 = to.trim1, trimmed2 = to.trim1, niter = i)))
 }
 
