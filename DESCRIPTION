@@ -1,6 +1,6 @@
 Package: rnmf
 Type: Package
-Title: Performs robust non-negative matrix factorizaion with (optional)
+Title: Performs robust non-negative matrix factorization with (optional)
     penalized terms.
 Description: To be updated.
 Version: 0.1.0.1
