@@ -3,9 +3,9 @@
 \name{rnmf}
 \alias{rnmf}
 \alias{rnmf-package}
-\title{rnmf}
+\title{Robust Nonnegative Matrix Factorization}
 \usage{
-rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
+rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
   trim = FALSE, ini.W = NULL, ini.H = NULL, ini.zeta = NULL,
   my.seed = NULL, variation = "cell", quiet = FALSE, nreg = 1,
   p1 = NA, n1 = NA)
@@ -23,19 +23,19 @@ rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
 
 \item{tol}{A number between 0 and 1. Tolerance for convergence. We suggest a number smaller than 0.01.}
 
-\item{trim}{A number between 0 and 1. Percentage of information to be trimmed. If trim = 0, the procedure will be .}
+\item{trim}{A number between 0 and 1. Percentage of contents of X to be trimmed. If trim = 0.}
 
-\item{ini.H}{A numeric matrix. Initial right matrix H in A ~= W \%*\% H. Must have the same number of columns as A, and k rows.}
+\item{ini.H}{A numeric matrix. Initial right matrix H in A ~= W \%*\% H. Must have the same number of columns as A and k rows.}
 
-\item{ini.W}{A numeric matrix. Initial left matrix W in A ~= W \%*\% H. Must have the same number of rows as A, and k columns.}
+\item{ini.W}{A numeric matrix. Initial left matrix W in A ~= W \%*\% H. Must have the same number of rows as A, and k columns. Only one of ini.H and ini.W is used.}
 
-\item{ini.zeta}{A logical matrix. Must have the same dimension as A. A "FALSE" in ini.zeta corresponds to an entry marked as to be trimmed. The number of "FALSE" in ini.zeta must be <=  round(trim * p * n).}
+\item{ini.zeta}{A logical matrix. Must have the same dimension as A. "FALSE" entries in ini.zeta corresponds to an entry marked as outliers and will be trimmed in the first iteration. The number of "FALSE" in ini.zeta must be <=  round(trim * p * n).}
 
-\item{my.seed}{Numeric. The seed for initialization of W or H. Ignored if ini.H or ini.W are not NULL.}
+\item{my.seed}{Numeric. The random seed for initialization of W or H. Ignored if ini.H or ini.W are set.}
 
-\item{variation}{Character string. Which variation to use? The options are: 'cell','col', 'smooth', 'row', 'rowsmooth'}
+\item{variation}{Character string. Which variation to use? The options are: 'cell', 'col', 'smooth', 'row'.}
 
-\item{quiet}{Logical. Display a short report on screen after the function is run?}
+\item{quiet}{Logical. If 'TRUE' display a short report on screen after the function is run.}
 
 \item{nreg}{number of runs in "cell" variation. Not tested. DON'T change its default value. (and don't ask questions).}
 
@@ -44,27 +44,29 @@ rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.005,
 \item{n1}{Don't ask questions.}
 }
 \value{
-A list of the following items:
-"W": Left matrix of the decomposition.
-"H": Right matrix of the decomposition.
+An object of class 'rnmf', which is a list of the following items:
+"W": Left matrix of the decomposition, columns of which are basis vectors of the low dimension projection.
+"H": Right matrix of the decomposition, columns of which are low dimensional encoding of the data.
 "fit": W \%*\% H.
 "trimmed1": A list of locations of trimmed cells after stage one in each iteration. (to be updated)
 "trimmed2": A list of locations of trimmed cells after stage two in each iteration. (to be updated)
 "niter": Number of iterations performed.
 }
 \description{
-rnmf
+rnmf provides functions to carry out and check results of robust nonnegative matrix
+factorization.
 
-Performs robust penalized non-negative matrix factorizaion on a non-negative
-matrix A to obtain W and H, such that A ~= W %*% H,  where A is a p by n matrix, W is a p by k matrix
-and H is a k by n matrix. Outliers in A are detected and trimmed (by cells, columns or rows, see details).
-Here we assume each row of A represents a feature/variable, and each column of A is an observation/sample.
-The objective function is ||A - W\%*\%H||_{trimmed} + alpha * ||W||_2^2 + beta * sum|H[:,j]|^2. The minimization process is a generalized alternating least square method.
+This function performs robust penalized non-negative matrix factorizaion on a non-negative
+matrix A to obtain W and H, such that A ~= W \%*\% H. Here A is a p by n matrix where columns
+are observations and rows are variables. W is a p by k, and
+H is k by n. Outliers in A are detected and trimmed (by cells, columns or rows, see details).
+The objective function is ||A - W\%*\%H||_{trimmed} + alpha * ||W||_2^2 + beta * sum|H[:,j]|^2.
+The minimization process is a generalized alternating least square method.
 }
 \examples{
 ## Load a clean single simulated tumor image.
 data("Tumor")
-## Add 5\% corruptions.
+## Add 5\\\% corruptions.
 Tumor.corrupted = Tumor
 set.seed(1)
 Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
@@ -75,8 +77,11 @@ res.rnmf3 = rnmf(A = Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.
 par(mfrow = c(2,2))
 image(Tumor.corrupted, main = "Corrupted")
 image(res.rnmf1$fit, main = "rnmf (no trimming) fit")
-image(res.rnmf2$fit, main = "rnmf (smooth) fit 2")
+image(res.rnmf2$fit, main = "rnmf (cell) fit 2")
 image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
+}
+\references{
+J. Sun, Y. Xu, K. Lopiano, and S. S. Young (2013), "Robust Nonnegative Matrix Factorization Procedures for Analyzing Tumor and Face Image Data," JSM Proceedings, Section on Statistical Learning and Data Mining. Alexandria, VA: American Statistical Association. 1318-1327
 }
 \keyword{Non-negative}
 \keyword{Robustness,}

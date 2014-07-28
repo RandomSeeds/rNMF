@@ -21,9 +21,9 @@
 #' Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
 #' ## Do rnmf with different settings
 #' res = rnmf(A = Tumor.corrupted, trim = 0.05, variation = "cell", my.seed = 1)
-#' seq.plot(res, mylayout = c(2,5))
+#' seq_plot(res, mylayout = c(2,5))
 
-seq.plot = function(res, width = 1280, height = 720,
+seq_plot <- function(res, width = 1280, height = 720,
     mylayout = c(2,5), force = FALSE)
 {
     W = res$W
@@ -43,7 +43,7 @@ seq.plot = function(res, width = 1280, height = 720,
     mybreaks = seq(0, max(fit), length = 101)
     for(i in 1:num.pages){
         filename = paste("seqplotting", Sys.Date(),"-page",i,".png", sep = "")
-        png(file = filename, width = width, height = height)
+        png(filename = filename, width = width, height = height)
         par(mfrow = mylayout, mar = c(1,1,2,1))
         for(u in ((i-1) * num.g.page + 1) : min((i * num.g.page), 2*k))
         if(u <= k){

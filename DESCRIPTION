@@ -8,8 +8,8 @@ Author: Yifan Xu, Jiayang Sun
 Maintainer: Yifan Xu <yxx218@case.edu>
 Depends:
     R (>= 2.14.0),
+Imports:
     nnls,
-    plyr,
 VignetteBuilder: knitr
 License: GPL(>=2)
 LazyData: true
