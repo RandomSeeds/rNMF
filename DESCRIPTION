@@ -3,8 +3,9 @@ Type: Package
 Title: Performs robust non-negative matrix factorization with (optional)
     penalized terms.
 Description: To be updated.
-Version: 0.1.0.1
-Author: Yifan Xu <yxx218@case.edu>, kenneth Lopiano <klopiano@gmail.com>, Jiayang Sun <jsun@case.edu>
+Version: 0.5
+Author: Yifan Xu <yxx218@case.edu>, Kenneth Lopiano <klopiano@gmail.com>,
+    Jiayang Sun <jsun@case.edu>
 Maintainer: Yifan Xu <yxx218@case.edu>
 Depends:
     R (>= 2.14.0),

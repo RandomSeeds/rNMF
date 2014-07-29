@@ -1,5 +1,4 @@
 # rnmf
-====
 
 ## robust NMF
 
@@ -35,3 +34,4 @@ example(rnmf)
   * Main functions are in '/R'. Data is in '/data'. 
   * 'DESCRIPTION' and '/R/rnmf-package.r' contain descriptions for the package.
   * '/R/rnmf.R' and '/R/seq_plot.R' are the two main functions of the package. 
+  * Use 'build.R' to build the package.
