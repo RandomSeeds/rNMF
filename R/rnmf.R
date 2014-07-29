@@ -85,13 +85,12 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
 
     pb = txtProgressBar(min = 0, max = maxit, style = 3) # Creates a progress bar.
     
-
     if(variation == "cell" & trim > 0){
         ## Initialize zeta (logic matrix the same size as A), indicating cells to be kept (non-outliers)
         zeta.allTRUE = matrix(TRUE, nrow = p, ncol = n)
         if(!missing(ini.zeta)){
             if(sum(c(!ini.zeta)) < round(trim * p * n)) {
-                warning("ini.zeta contains too few FALSES (outliers); other outliers are randomly picked.")
+                warning("The percentage of FALSES (outliers) in ini.zeta is smaller than 'trim'; Other outliers are randomly picked.")
                 need.to.fill = round(trim * p * n) - sum(c(!ini.zeta))
                 current.true = which(ini.zeta)
                 to.change = sample(current.true, need.to.fill)
@@ -147,6 +146,7 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
         for(i in 1:maxit){
             flag = FALSE
             setTxtProgressBar(pb, i)  # update the progress bar
+            
             ## Iteration stage 1. Estimate H. ||MH - C||
             C = rbind(A, matrix(0,1,n))
             M = rbind(W, sqrt(beta) * matrix(1, 1, k))
@@ -207,11 +207,11 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
                 ##     H.prev <- H
                 ##     H = Nnls(M,C.s)
                 }else{
-                    stop("Wrong mode. Try one of the following: 'col', 'cellcol', 'rowrow', 'cellrow', 'smooth','all', 'cellall', 'rowsmooth'")
+                    stop("Wrong mode. Try one of the following: 'cell', 'col', 'row', 'smooth'")
                 }
             }
 
-            ## Iteration stage 2. Estimate W. ||MW^T - C||.
+            ## Iteration stage 2. Find W in min||MW^T - C||.
             C = rbind(t(A), matrix(0, nrow = k, ncol = p))
             M = rbind(t(H), sqrt(alpha) * diag(k))
             W = t(Nnls(M,C))
@@ -267,7 +267,7 @@ rnmf = function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
                 }else if(variation == "row" | variation == "cellrow"){
                     ## No change
                 }else{
-                    stop("No such mode. Try one of the following: 'col', 'colrow', 'cellcol', 'smooth', 'row', 'cellrow' or 'rowsmooth'")
+                    stop("Wrong mode. Try one of the following: 'cell', 'col', 'row', 'smooth'")
                 }
             }
             ##J = nmlz(W) # Find the normalizing matrix of W
