@@ -8,12 +8,12 @@ library("roxygen2")
 library("knitr")
 ## Create the package directory
 ## create("rnmf")
-
-document("rnmf")
+setwd("/Users/yifanxu/gdrive/aarepos/rnmf/")
+document("rNMF")
 tools::showNonASCII(readLines("./rnmf/man/rnmf.Rd")) 
 ## Build the package (a tar ball)
-system("R CMD build rnmf")
-system("R CMD check rnmf")
+system("R CMD build rNMF")
+system("R CMD check rNMF")
 
 remove.packages("rnmf")
 install.packages("rnmf_0.5.tar.gz", repos = NULL, type = "source")

@@ -1,0 +1,107 @@
+### R package rnmf: Robust Nonnegative Matrix Factorization
+Authors: Ethan Y. Xu and Jiayang Sun  
+Maintainer: Ethan Y. Xu  
+Last update: August 24, 2014  
+
+### Overview
+This page provides installation instruction and usage examples for the R package **rnmf**.
+
+### Robust nonnegative matrix factorization (rNMF)
+rNMF decomposes a p by n nonnegative matrix $X$ into $X\approx WH$ by minimizing a penalized objective function
+
+$$||X-WH||_{F,trim}^2 + \alpha||W||_F + \beta\sum||H_{.j}||_1^2$$
+
+Here rows of $X$ are variables and columns are observations. Both $W$ and $H$ are nonnegative. $W$ is p by k, $H$ is k by n with $k<\min\{p,n\}$. $\alpha$ and $\beta$ control the magnitude of $W$ and the sparsity of $H$. 
+
+As a major advantage over the regular NMF, rNMF detects outliers in $X$ and remove them from the fitting objective function. See [J. Sun, Y. Xu, K. Lopiano and S. Young 2013] for more details.
+
+The procedure can be used to extract clean low dimensional structure from corrupted high dimensional data, such as images, DNA/RNA sequencing data and documents. It can also be used to compress a single corrupted image. 
+
+### Install and load the package
+After downloading the package file "rnmf_0.5.tar.gz" from [GitHub repo address here], put it in your preferred working directory and run both of the following lines (remove the '##' from the first line):
+```{r, eval=2}
+install.packages("rnmf_0.5.tar.gz", repos = NULL, type = "source")
+library(rnmf)
+```
+
+### Examples
+rNMF can be used on any nonnegative data matrix. For illustration purposes, we give two examples with image data. 
+
+The first example demostrates the decomposition and outlier extraction of multiple corrupted images by rNMF. The second example demostrates the compression of a single corrupted image by rNMF.
+
+### Example 1
+First load the build-in data set 'Symbols_c', a 5625 by 30 matrix where each column contains a vectorized 75 by 75 image.
+```{r}
+data(Symbols_c)
+```
+
+The function 'see()' shows the corrupted images:
+```{r, fig.height=3.2, fig.width=3.2}
+see(Symbols_c, title = "Corrupted data set")
+```
+
+Solid boxes in the images are corruptions. In the following we compare the decomposition results by regular NMF and rNMF. 
+
+#### Regular NMF decomposition (trim = FALSE, k = 4)
+```{r, echo=TRUE}
+res <- rnmf(Symbols_c, k = 4, showprogress = FALSE, my.seed = 100)
+```
+
+The class of `res` is "rnmf"(see ?rnmf for details). `res$fit` gives the reconstruction:
+```{r, fig.height=3.2, fig.width=3.2}
+see(res$fit, title = "Regular NMF reconstruction with k = 4")
+```
+
+Basis vectors are given by `res$W`
+```{r, fig.height=1, fig.width=3, warning=FALSE}
+see(res$W, title = "Regular NMF basis", layout = c(1,4))
+```
+
+Shadows in above images indicate that **corruptions were not removed** and containminated the decomposition.
+
+#### rNMF decomposition with trimming (k = 4)
+```{r, echo=TRUE}
+res2 <- rnmf(Symbols_c, k = 4, trim = 0.03, showprogress = FALSE, my.seed = 100)
+```
+rnmf reconstruction:
+```{r, fig.height=3.2, fig.width=3.2}
+see(res2$fit, title = "rNMF reconstruction with k = 4")
+```
+
+```{r, fig.height=1, fig.width=3, warning=FALSE}
+see(res2$W, title = "rNMF basis vectors", layout = c(1,4))
+```
+
+The results are much more clear and the outliers are extracted almost perfectly:
+```{r, fig.height=3.5, fig.width=3.5}
+outliers <- matrix(0, nrow = nrow(Symbols_c), ncol = ncol(Symbols_c))
+outliers[res2$trimmed[[res2$niter]]] <- 1
+see(outliers, title = "Outliers extracted by rnmf")
+```
+
+### Example 2
+In this example we compare the compression of a single corrupted image by both regular NMF and rNMF. First we load a build-in corrupted face image.
+```{r}
+data(face)
+```
+#### Regular NMF compression (trim = FALSE)
+```{r, echo=TRUE}
+res <- rnmf(face, k = 10, showprogress = FALSE, my.seed = 100)
+```
+
+```{r, fig.height=5/1.5, fig.width=4/1.5}
+see(res$fit, title = "NMF compression", col = "grey", input = "single")
+```
+The compression is heavily contaiminated.
+
+#### rNMF compression with trimming
+```{r, echo=TRUE}
+res2 <- rnmf(face, k = 10, trim = 0.025, showprogress = FALSE, my.seed = 100)
+```
+
+```{r, fig.height=5/1.5, fig.width=4/1.5}
+see(res2$fit, title = "rNMF compression", col = "grey", input = "single")
+```
+
+## Reference
+[J. Sun et al. 2013], [J. Sun, Y. Xu 2014]. 

@@ -17,7 +17,8 @@
  ## @examples
  ## #R code here showing how your function works (To be finished)
 
-Nnls.trimW = function(H, A, zeta, alpha, p1, n1, k, p){
+Nnls.trimW <- function(H, A, zeta, alpha, p1, n1, k, p)
+  {
     ## Solution 1: if entire row is trimmed, don't update that row of W.
     ## fun1 = function(i, H, A, zeta){
     ##     if(all(!c(zeta[i,]))){
@@ -48,9 +49,9 @@ Nnls.trimW = function(H, A, zeta, alpha, p1, n1, k, p){
             x.ext = c(x.sub, rep(0,k))
             return(nnls(H.ext, x.ext)$x)
         }else{
-            col.keep = c(zeta[i,])
-            H.trim = H[,col.keep]
-            x.trim = A[i,col.keep]
+            col.keep = c(zeta[i, ])
+            H.trim = H[, col.keep]
+            x.trim = A[i, col.keep]
             H.ext = rbind(t(H.trim), sqrt(alpha) * diag(k))
             x.ext = c(x.trim, rep(0,k))
             return(nnls(H.ext, x.ext)$x)

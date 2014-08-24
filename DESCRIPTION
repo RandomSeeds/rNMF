@@ -1,9 +1,13 @@
-Package: rnmf
+Package: rNMF
 Type: Package
-Title: Performs robust non-negative matrix factorization with (optional)
-    penalized terms.
-Description: To be updated.
-Version: 0.5
+Title: Robust non-negative matrix factorization
+Description: This package includes functions that perform robust nonnegative
+    matrix factorization (rNMF). rNMF takes a nonnegative data matrix where
+    rows are features and columns are observations, and decomposes it into a
+    product of two low rank nonnegative matrices, while detecting and trimming
+    outliers. The main function is rnmf(). The package also includes a quick
+    visualization tool, see(), that arranges and shows vectorized images.
+Version: 1.0.0
 Author: Yifan Xu <yxx218@case.edu>, Kenneth Lopiano <klopiano@gmail.com>,
     Jiayang Sun <jsun@case.edu>
 Maintainer: Yifan Xu <yxx218@case.edu>
