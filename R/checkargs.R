@@ -1,4 +1,4 @@
-checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p1, n1){
+checkargs = function(A, k, alpha, beta, maxit, tol, trim, ini.W, ini.zeta, my.seed, variation, quiet, nreg, p, n){
     if(!is.matrix(A)) {stop("The input A is not a matrix. Consider as.matrix(A)?")}
     if(!is.numeric(A)) {stop("The input A is not a numeric matrix.")}
     if(!all(A >= 0)) {stop("Not all entries are non-negative.")}

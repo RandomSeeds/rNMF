@@ -14,6 +14,7 @@
 ## #R code here showing how your function works (To be finished)
 
 ## Nnls.trimH for variation "cell"
+
 Nnls.trimH = function(W, A, zeta, beta, k, n){
     fun1 = function(j, W, A, zeta){
         if(all(!c(zeta[,j]))){
