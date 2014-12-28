@@ -7,14 +7,14 @@ Description: This package includes functions that perform robust nonnegative
     product of two low rank nonnegative matrices, while detecting and trimming
     outliers. The main function is rnmf(). The package also includes a quick
     visualization tool, see(), that arranges and shows vectorized images.
-Version: 1.0.0
-Author: Yifan Xu <yxx218@case.edu>, Kenneth Lopiano <klopiano@gmail.com>,
-    Jiayang Sun <jsun@case.edu>
+Version: 0.5
+Author: Yifan Xu <yxx218@case.edu>, Jiayang Sun <jsun@case.edu>
 Maintainer: Yifan Xu <yxx218@case.edu>
-Depends:
-    R (>= 2.14.0),
-Imports:
+Depends: 
+    R (>= 2.14.0)
+Imports: 
     nnls
 VignetteBuilder: knitr
 License: GPL(>=2)
 LazyData: true
+Depends: knitr

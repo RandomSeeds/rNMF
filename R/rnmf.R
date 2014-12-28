@@ -31,8 +31,8 @@
 #' @param my.seed a nonnegative integer. Default = NULL. The random seed for 
 #' initialization of W or H. my.seed is ignored if ini.H or ini.W is not NULL.
 #' @param variation a character string. Default = "cell". Triming variation. The options are: 'cell', 'col', 'row' and 'smooth'.
-#' @param quiet a logic string. Default = FALSE. If 'TRUE' the short on screen 
-#' report after the run is suppressed.
+#' @param quiet a logic string. Default = FALSE. If quiet == TRUE the on screen 
+#' report after rnmf() is run is suppressed.
 #' @param nreg a positive integer. Default = 1. Number of runs in the "cell" 
 #' variation. Not tested yet. DON'T change its default value. (and don't ask questions).
 #' @param showprogress a logic string. Default = TRUE. If TRUE show progress 
@@ -140,7 +140,7 @@ rnmf <- function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
             
             ##------Stage 2------##
             ## Fit W
-            W = Nnls.trimW(H, A, zeta, alpha, p1, n1, k, p)
+            W = Nnls.trimW(H, A, zeta, alpha, k, p)
             for(j in 1:nreg) {
                 ## Find residuals
                 R = abs(A - W %*% H)
@@ -150,7 +150,7 @@ rnmf <- function(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
                 zeta <- matrix(TRUE, nrow = p, ncol = n)
                 zeta[to.trim[[i]]] <- FALSE
                 ## Refit W
-                W = Nnls.trimW(H, A, zeta, alpha, p1, n1, k, p)
+                W = Nnls.trimW(H, A, zeta, alpha, k, p)
                 J = nmlz(W) # Find the normalizing matrix of W
                 W = W %*% J; H = solve(J) %*% H
             }
