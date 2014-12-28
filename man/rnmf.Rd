@@ -4,13 +4,13 @@
 \alias{rnmf}
 \title{Robust penalized non-negative matrix factorization.}
 \usage{
-rnmf(A, k = 5, alpha = 0, beta = 0, maxit = 50, tol = 0.001,
+rnmf(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
   trim = FALSE, ini.W = NULL, ini.H = NULL, ini.zeta = NULL,
   my.seed = NULL, variation = "cell", quiet = FALSE, nreg = 1,
   showprogress = TRUE)
 }
 \arguments{
-\item{A}{a nonnegative numerical matrix. The matrix to be decomposed into WH.}
+\item{X}{a nonnegative numerical matrix. The matrix to be decomposed into WH.}
 
 \item{k}{a nonnegative integer. The lower dimension (number of columns of W).}
 
@@ -28,13 +28,13 @@ convergence. We suggest a number smaller than 0.01.}
 X to be trimmed. rnmf() performs the regular NMF if trim = 0.}
 
 \item{ini.W}{a nonnegative numeric matrix with k columns and the same number
-of rows as A. Default = NULL. Initial left matrix W in A ~ WH.}
+of rows as X. Default = NULL. Initial left matrix W in X ~ WH.}
 
 \item{ini.H}{a nonnegative numeric matrix with k rows and the same number of
-columns as A. Default = NULL. Initial right matrix H in A ~ WH. Must have the
-same number of columns as A and k rows. ini.H is ignored if ini.W is not NULL.}
+columns as X. Default = NULL. Initial right matrix H in X ~ WH. Must have the
+same number of columns as X and k rows. ini.H is ignored if ini.W is not NULL.}
 
-\item{ini.zeta}{a logical matrix the same size as A. Default = NULL. Initial
+\item{ini.zeta}{a logical matrix the same size as X. Default = NULL. Initial
 location of outliers (FALSE in ini.zeta). The number of "FALSE" in ini.zeta
 must be <=  round(trim * p * n).}
 
@@ -66,15 +66,15 @@ dimensional encoding of the data.
 }
 \description{
 This function performs robust penalized non-negative matrix factorizaion on a
-non-negative matrix A to obtain W and H, such that A ~ WH. Here A is a p by n
-matrix where columns are observations and rows are variables. W is a p by k,
-and H is k by n. Outliers in A are detected and trimmed (by cells, columns or
-rows, see "details"). The objective function is
+non-negative matrix X to obtain W and H, such that X ~ WH.
 }
 \details{
-||A - WH||_{trimmed} + alpha * ||W||_2^2 + beta * sum(|H_.j|)^2.
-
-The minimization process is a generalized alternating least square method.
+Here X is a p by n
+matrix where columns are observations and rows are variables. W is a p by k,
+and H is k by n. Outliers in X are detected and trimmed (by cells, columns or
+rows, see "details"). The objective function is
+#' ||X - WH||_{trimmed} + alpha * ||W||_2^2 + beta * sum(|H_.j|)^2.
+#' The minimization process is a generalized alternating least square method.
 }
 \examples{
 ## Load a clean single simulated tumor image.
@@ -84,9 +84,9 @@ Tumor.corrupted = Tumor
 set.seed(1)
 Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
 ## Do rnmf with different settings
-res.rnmf1 = rnmf(A = Tumor.corrupted, trim = FALSE, my.seed = 1)
-res.rnmf2 = rnmf(A = Tumor.corrupted, tol = 0.001, trim = 0.06, my.seed = 1)
-res.rnmf3 = rnmf(A = Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 1, variation = "smooth")
+res.rnmf1 = rnmf(X = Tumor.corrupted, trim = FALSE, my.seed = 1)
+res.rnmf2 = rnmf(X = Tumor.corrupted, tol = 0.001, trim = 0.06, my.seed = 1)
+res.rnmf3 = rnmf(X = Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 1, variation = "smooth")
 par(mfrow = c(2,2))
 image(Tumor.corrupted, main = "Corrupted")
 image(res.rnmf1$fit, main = "rnmf (no trimming) fit")

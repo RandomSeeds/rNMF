@@ -13,8 +13,8 @@ Maintainer: Yifan Xu <yxx218@case.edu>
 Depends: 
     R (>= 2.14.0)
 Imports: 
-    nnls
+    nnls, knitr
 VignetteBuilder: knitr
 License: GPL(>=2)
 LazyData: true
-Depends: knitr
+

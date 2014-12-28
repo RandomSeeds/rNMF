@@ -2,4 +2,5 @@
 
 export(rnmf)
 export(see)
+import(knitr)
 import(nnls)
