@@ -2,19 +2,19 @@
 % Please edit documentation in R/see.R
 \name{see}
 \alias{see}
-\title{See vectorized or single images represented by a matrix}
+\title{Visualize vectorized images}
 \usage{
 see(X, title = "Image", col = "heat", input = "multi", layout = "auto",
   ...)
 }
 \arguments{
 \item{X}{a numeric matrix. X is either a matrix where each column contains
-the pixels of a vectorized image, or X is simply the pixel matrix of one
+the pixels of a vectorized image, or simply the pixel matrix of one
 single image. The type of X is indicated by the argument 'input'.}
 
 \item{title}{a charactor string. Title of the graph.}
 
-\item{col}{a vector string. Defult = "heat". What color scheme to use?
+\item{col}{a character string. Defult = "heat". What color scheme to use?
 Currently allows:
 \itemize{
   \item "heat" for heat color
@@ -22,35 +22,30 @@ Currently allows:
   \item "grey" for grey scale
 }}
 
-\item{input}{a charactor string. Defult = "multi". Possible values:
+\item{input}{a charactor string with default = "multi", specifying the type of
+images in X. Possible options are:
 \itemize{
   \item "multi" if X contains multiple vectorized square images.
-  \item "single" if X is the matrix of single image.
+  \item "single" if X is the matrix of a single image.
 }}
 
-\item{layout}{a vector of 2 numbers or a charactor string "auto". If layout
-= "auto", multiple images will be arranged in approximatedly 9 by 16 ratio.
+\item{layout}{a vector of 2 possible integers or a charactor string "auto" (default). If layout
+= "auto", multiple images will be arranged in an approximatedly 9 by 16 ratio.
 If layout = c(a,b), then images will be arranged in a rows and b columns.}
 
 \item{...}{further arguments to pass to image().}
 }
-\value{
-Null
-}
 \description{
-The function prints multiple or single images on screen, depends
-on the format of the input matrix (see details). Different color schemes can
-be selected. Build-in color include greyscale, blue-red palette and heat
-color.
+The function is a wrapper of image(). It arranges and prints multiple or single images.
 }
 \details{
 If the input is a matrix of vectorized images (input = "multi",
 default setting), that is, each column contains pixels of one vectorized
 image, then see() restores each column into a matrix and show all images in
 one frame. Current version assumes the images are squared images.
-
 If the input is a matrix of one image (input = "single"), see() shows this
-image.
+image. Different color palette can be selected by specify the "col" argument.
+Build-in color palette includes greyscale, blue-red and heat color.
 }
 \examples{
 ## Load a build-in data set Symbols, a 5625 by 30 matrix containing 30 75x75

@@ -4,11 +4,13 @@
 \name{face}
 \alias{face}
 \title{An image of a corrupted face image.}
-\format{A data matrix containing 192 rows and 168 columns}
+\format{A data matrix containing 192 rows and 168 columns.}
 \description{
-A 192 by 168 data matrix storing pixel intensities of a corrupted face image.
+A 192 by 168 data matrix storing gray-scale pixel intensities of a corrupted face image.
 The original image was taken from Yale Face Database B [Georghiades et al. 2001]
-and manually corrupted.
+and then manually corrupted.
+Run the following line to see the image:
+image(t(face[ncol(face):1, ]), axes = FALSE, col = grey(seq(0, 1, length = 256)), asp = 1)
 }
 \keyword{datasets}
 

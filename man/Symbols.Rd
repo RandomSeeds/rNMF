@@ -4,11 +4,11 @@
 \name{Symbols}
 \alias{Symbols}
 \title{30 images containing 4 different symbols.}
-\format{A data matrix containing 30 columns and 5625 rows.}
+\format{A 5625 by 30 numeric matrix.}
 \description{
 A 5625 by 30 matrix. Each column stores vectorized pixels of a 75 by 75 image.
 Every image contains one or more of four shapes: circle, square, triangle and cross.
-The pixel intensities are standarized to 0 to 1.
+The pixel intensities are standarized to 0 to 1. Run see(Symbols) to visualize.
 }
 \keyword{datasets}
 

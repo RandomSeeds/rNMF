@@ -2,93 +2,82 @@
 % Please edit documentation in R/rnmf.R
 \name{rnmf}
 \alias{rnmf}
-\title{Robust penalized non-negative matrix factorization.}
+\title{Robust penalized nonnegative matrix factorization.}
 \usage{
 rnmf(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
-  trim = FALSE, ini.W = NULL, ini.H = NULL, ini.zeta = NULL,
-  my.seed = NULL, variation = "cell", quiet = FALSE, nreg = 1,
-  showprogress = TRUE)
+  trim = FALSE, ini.W = NULL, ini.zeta = NULL, my.seed = NULL,
+  variation = "cell", quiet = FALSE, nreg = 1, showprogress = TRUE)
 }
 \arguments{
-\item{X}{a nonnegative numerical matrix. The matrix to be decomposed into WH.}
+\item{X}{a nonnegative numerical matrix that will be decomposed into WH.}
 
-\item{k}{a nonnegative integer. The lower dimension (number of columns of W).}
+\item{k}{a nonnegative integer representing the dimension to which X is projected (equals the number of columns of W and the number of rows of H).}
 
-\item{alpha}{a nonnegative number. Default = 0. It controls the magnitude of
-||W||_2^2.}
+\item{alpha}{a nonnegative number that controls the magnitude of W. Default = 0.}
 
-\item{beta}{a nonnegative number. Default = 0. It controls the sparsity of H.}
+\item{beta}{a nonnegative number that controls the sparsity of H. Default= 0.}
 
-\item{maxit}{a positive integer. Default = 50. Maximum number of iterations.}
+\item{maxit}{a positive integer indicating the maximum number of iterations. Default = 20.}
 
-\item{tol}{a number between 0 and 1. Default = 0.001. Tolerance for
-convergence. We suggest a number smaller than 0.01.}
+\item{tol}{a number between 0 and 1 representing the tolerance for convergence. We suggest a number smaller than 0.01. Default = 0.001.}
 
-\item{trim}{a number between 0 and 1. Default = 0. Percentage of contents of
-X to be trimmed. rnmf() performs the regular NMF if trim = 0.}
+\item{trim}{a number between 0 and 1 representing the percentage of contents of X that will be trimmed. rnmf() performs the regular NMF if trim = 0 (default).}
 
-\item{ini.W}{a nonnegative numeric matrix with k columns and the same number
-of rows as X. Default = NULL. Initial left matrix W in X ~ WH.}
+\item{ini.W}{a nonnegative numeric matrix with k columns and the same number of rows as X. ini.W is the initialization of the left matrix W. If ini.W == NULL (default), then the algorithm will randomly generate one.}
 
-\item{ini.H}{a nonnegative numeric matrix with k rows and the same number of
-columns as X. Default = NULL. Initial right matrix H in X ~ WH. Must have the
-same number of columns as X and k rows. ini.H is ignored if ini.W is not NULL.}
+\item{ini.zeta}{a logical matrix of the same size as X, representing the initial locations of the outliers (FALSE cells in ini.zeta). The number of "FALSE" in ini.zeta must be less than or equal to round(trim * p * n). If ini.zeta == NULL (default) then outliers in the first iteration will be chosen as cells with the largest residuals after the first iteration.}
 
-\item{ini.zeta}{a logical matrix the same size as X. Default = NULL. Initial
-location of outliers (FALSE in ini.zeta). The number of "FALSE" in ini.zeta
-must be <=  round(trim * p * n).}
+\item{my.seed}{the random seed for initialization of W. If left to be NULL (default) a random seed is used. my.seed is ignored if ini.W is not NULL.}
 
-\item{my.seed}{a nonnegative integer. Default = NULL. The random seed for
-initialization of W or H. my.seed is ignored if ini.H or ini.W is not NULL.}
+\item{variation}{a character string indicating which trimming variation is used. The options are: 'cell' (default), 'col', 'row' and 'smooth'.}
 
-\item{variation}{a character string. Default = "cell". Triming variation. The options are: 'cell', 'col', 'row' and 'smooth'.}
+\item{quiet}{a logical string with default value = FALSE indicating if a report should be shown on console.}
 
-\item{quiet}{a logic string. Default = FALSE. If quiet == TRUE the on screen
-report after rnmf() is run is suppressed.}
+\item{nreg}{a positive integer controlling the number of iterations to find outliers when H (or W) is fixed. Currently only implemented in the "cell" variation with default value 1. Need more testing.}
 
-\item{nreg}{a positive integer. Default = 1. Number of runs in the "cell"
-variation. Not tested yet. DON'T change its default value. (and don't ask questions).}
-
-\item{showprogress}{a logic string. Default = TRUE. If TRUE show progress
-bar during iteration}
+\item{showprogress}{a logical string. If TRUE (default) show progress bar during iteration.}
 }
 \value{
 An object of class 'rnmf', which is a list of the following items:
 \itemize{
-\item "W": Left matrix of the decomposition, columns of which are basis
-vectors of the low dimension projection.
-\item "H": Right matrix of the decomposition, columns of which are low
-dimensional encoding of the data.
-\item "fit": W \%*\% H.
-\item "trimmed": A list of locations of trimmed cells in each iteration
+\item "W": Left matrix of the decomposition X ~ WH, columns of W are basis vectors of the low dimension projection.
+\item "H": Right matrix of the decomposition X ~ WH, columns of which are low dimensional encoding of the data.
+\item "fit": The fitted matrix W \%*\% H.
+\item "trimmed": A list of locations of trimmed cells in each iteration.
 \item "niter": Number of iterations performed.
 }
 }
 \description{
-This function performs robust penalized non-negative matrix factorizaion on a
-non-negative matrix X to obtain W and H, such that X ~ WH.
+Performs robust penalized nonnegative matrix factorizaion on a nonnegative matrix X to obtain low dimensional nonnegative matrices W and H, such that X ~ WH, while detecting and trimming different types of outliers in X. See details.
 }
 \details{
-Here X is a p by n
-matrix where columns are observations and rows are variables. W is a p by k,
-and H is k by n. Outliers in X are detected and trimmed (by cells, columns or
-rows, see "details"). The objective function is
-#' ||X - WH||_{trimmed} + alpha * ||W||_2^2 + beta * sum(|H_.j|)^2.
-#' The minimization process is a generalized alternating least square method.
+Given a nonnegative p by n data matrix X, representing measurements of p variables from n subjects, rNMF decomposes X as X ~ WH and detect and trims outlers. Here W and H are p by k and k by n nonnegative matrices, respectively; and k <= min{p, n} is called the dimension of the subspace to which X is projected. The objective function is
+
+||X - WH||_{trimmed} + alpha * ||W||_2^2 + beta * sum(|H_.j|)^2
+
+where alpha controls the magnitude of W, and beta controls the sparsity of H. The algorithm iteratively updates W, H and the outlier set zeta with nonnegative least square fittings until convergence.
+
+Four variations of trimming are included in the algorithm: "cell", "row", "column" and "smooth". The "cell" variation trims individual entry-wise outliers while "row" and "column" variations trim entire row or column outliers. The fourth variation "smooth" fill the entries that are declared outliers in each iteration by the average of the surrounding entries.
 }
 \examples{
 ## Load a clean single simulated tumor image.
-data("Tumor")
+data("tumor")
 ## Add 5\\\% corruptions.
-Tumor.corrupted = Tumor
+tumor.corrupted <- tumor
 set.seed(1)
-Tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] = 1
-## Do rnmf with different settings
-res.rnmf1 = rnmf(X = Tumor.corrupted, trim = FALSE, my.seed = 1)
-res.rnmf2 = rnmf(X = Tumor.corrupted, tol = 0.001, trim = 0.06, my.seed = 1)
-res.rnmf3 = rnmf(X = Tumor.corrupted, k = 10, beta = 0.1, tol = 0.001, trim = 0.06, my.seed = 1, variation = "smooth")
+tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] <- 1
+## Run rnmf with different settings
+# No trimming
+res.rnmf1 <- rnmf(X = tumor.corrupted, trim = FALSE, my.seed = 1)
+# 6 percent trimming, low dimension k = 5 (default)
+res.rnmf2 <- rnmf(X = tumor.corrupted, tol = 0.001, trim = 0.06, my.seed = 1)
+# add sparsity constraint of H (beta = 0.1) with k = 10, and the "smooth" variation.
+res.rnmf3 <- rnmf(X = tumor.corrupted, k = 10, beta = 0.1,
+                  tol = 0.001, trim = 0.06, my.seed = 1, variation = "smooth")
+
+## Show results:
 par(mfrow = c(2,2))
-image(Tumor.corrupted, main = "Corrupted")
+image(tumor.corrupted, main = "Corrupted tumor image")
 image(res.rnmf1$fit, main = "rnmf (no trimming) fit")
 image(res.rnmf2$fit, main = "rnmf (cell) fit 2")
 image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
