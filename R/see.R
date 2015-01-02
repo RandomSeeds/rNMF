@@ -60,7 +60,7 @@ see <- function(X, title = "Image",
   ncol <- ncol(X)
   nrow <- nrow(X)
   if(input == "multi"){
-    if(layout == "auto"){
+    if(layout[1] == "auto"){
       nROW <- ceiling(sqrt(9/16 * ncol))
       nCOL <- ceiling(ncol / nROW)
     }else{
@@ -77,6 +77,7 @@ see <- function(X, title = "Image",
     }
     mtext(title, outer = TRUE, cex = 1)
   }else if(input == "single"){
+    par(mar = c(0.5,0.5,3,0.5), oma = c(0,0,2,0))
     image(t(X[nrow:1,]), col = mycols, main = title,
           xaxt = "n", yaxt = "n", asp = nrow/ncol, ...)
   }else{

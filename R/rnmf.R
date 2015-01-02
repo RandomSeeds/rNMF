@@ -16,7 +16,7 @@
 #' @param beta a nonnegative number that controls the sparsity of H. Default= 0. The larger the beta is, the higher penalty on sum_i ||H_j|| is, where H_j is the j-th column of H. Default = 0, representing no penalty on the sparsity of H. 
 #' @param maxit the maximum number of iterations. Default = 20. The algorithm is done as follows: 1) fits W given H, then trims outliers in X, i.e. ones with large residuals from X - WH, then refits W without the outliers [this step can be repeated  'nreg' times, currently nreg = 1],  then 2) repeat as in 1) with the roles of W and H swapped,  and then iterate through 1) and 2) until convergence. Default = 20, allowing a maximum of 20 pairs of 1) and 2).
 #' @param tol the convergence tolerance. We suggest it to be a positive number smaller than 0.01. Default = 0.001.
-#' @param gamma a trimming percentage in (0, 1) of X. Default = 0.05 will trim 5% of elements of X (measured by cell,  row or column as specified in `variation’). If trim=0,  there is no trim; so rNMF then performs the regular NMF.
+#' @param gamma a trimming percentage in (0, 1) of X. Default = 0.05 will trim 5\% of elements of X (measured by cell,  row or column as specified in 'variation'). If trim=0,  there is no trim; so rNMF then performs the regular NMF.
 #' @param ini.W the initialization of the left matrix W, which is a "p by k" nonnegative numeric matrix. Default = NULL directs the algorithm to randomly generate an ini.W.
 #' @param ini.zeta a "p by n" logical matrix of True or False, indicating the initial locations of the outliers. The number of "TRUE"s in ini.zeta  must be less than or equal to m = the rounded integer of (gamma * p * n).  Default = NULL, initializes the cells as TRUE with the m largest residuals after the first iteration. Required only for "cell" trimming option.  
 #' @param my.seed the random seed for initialization of W. If left to be NULL(default) a random seed is used.  Required only if ini.W is not NULL.
@@ -27,11 +27,11 @@
 #' 
 #' @return An object of class 'rnmf', which is a list of the following items:
 #' \itemize{
-#' \item "W": left matrix of the decomposition X ~ WH, columns of which (i.e. W) are basis vectors of the low dimension projection.
-#' \item "H": right matrix of the decomposition X ~ WH, columns of which (i.e. W) are low dimensional encoding of the data.
-#' \item "fit": the fitted matrix W \%*\% H.
-#' \item "trimmed": a list of locations of trimmed cells in each iteration.
-#' \item "niter": the number of iterations performed.
+#' \item W: left matrix of the decomposition X ~ WH, columns of which (i.e. W) are basis vectors of the low dimension projection.
+#' \item H: right matrix of the decomposition X ~ WH, columns of which (i.e. W) are low dimensional encoding of the data.
+#' \item fit: the fitted matrix W \%*\% H.
+#' \item trimmed: a list of locations of trimmed cells in each iteration.
+#' \item niter: the number of iterations performed.
 #' }
 #'
 #' @export
@@ -52,14 +52,15 @@
 #' res.rnmf2 <- rnmf(X = tumor.corrupted, tol = 0.001, gamma = 0.06, my.seed = 1)
 #' # add sparsity constraint of H (beta = 0.1) with k = 10, and the "smooth" variation.
 #' res.rnmf3 <- rnmf(X = tumor.corrupted, k = 10, beta = 0.1,
-#'                   tol = 0.001, gamma = 0.06, my.seed = 1, variation = "smooth")
+#'                   tol = 0.001, gamma = 0.06, my.seed = 1, 
+#'                   variation = "smooth", maxit = 30)
 #'
 #' ## Show results:
 #' par(mfrow = c(2,2), mar = c(2,2,2,2))
-#' image(tumor.corrupted, main = "Corrupted tumor image")
-#' image(res.rnmf1$fit, main = "rnmf (no trimming) fit")
-#' image(res.rnmf2$fit, main = "rnmf (cell) fit 2")
-#' image(res.rnmf3$fit, main = "rnmf (smooth) fit 3")
+#' image(tumor.corrupted, main = "Corrupted tumor image", xaxt = "n", yaxt = "n")
+#' image(res.rnmf1$fit, main = "rnmf (no trimming) fit", xaxt = "n", yaxt = "n")
+#' image(res.rnmf2$fit, main = "rnmf (cell) fit 2", xaxt = "n", yaxt = "n")
+#' image(res.rnmf3$fit, main = "rnmf (smooth) fit 3", xaxt = "n", yaxt = "n")
 
 rnmf <- function(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
     gamma = FALSE, ini.W = NULL, ini.zeta = NULL, my.seed = NULL, 
@@ -103,17 +104,17 @@ rnmf <- function(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
       ##--------------------------
         ## Initialize zeta (logic matrix the same size as X)
         if(!is.null(ini.zeta)){
-            if(sum(c(!ini.zeta)) < round(gamma * p * n)) {
-                warning("The percentage of FALSES (outliers) in ini.zeta is smaller than 'gamma'; Other outliers are randomly picked.")
-                need.to.fill <- round(gamma * p * n) - sum(c(!ini.zeta))
-                current.true <- which(ini.zeta)
-                to.change <- sample(current.true, need.to.fill)
-                ini.zeta[to.change] <- FALSE
+            if(sum(ini.zeta) < round(gamma * p * n)) {
+                warning("The percentage of FALSES (outliers) in ini.zeta 
+                        is smaller than 'gamma'; Other outliers are randomly picked.")
+                more.outliers <- sample(which(!ini.zeta), 
+                                    round(gamma * p * n) - sum(ini.zeta))
+                ini.zeta[more.outliers] <- TRUE
             }else{}
             zeta <- ini.zeta
         }else{
-            zeta <- matrix(TRUE, nrow = p, ncol = n)
-            zeta[sample(1 : (p * n), round(gamma * p * n))] <- FALSE ## randomize zeta
+            zeta <- matrix(FALSE, nrow = p, ncol = n)
+            zeta[sample(1 : (p * n), round(gamma * p * n))] <- TRUE ## randomize zeta
         }
 
         ## Start iterations.
@@ -121,41 +122,44 @@ rnmf <- function(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
             if(showprogress) setTxtProgressBar(pb, i) ## update the progress bar
             ##------Stage 1------##
             ## Given W, fit H
-            H <- Nnls.trimH(W, X, zeta, beta, k, n)
+            H <- Nnls.trimH(W, X, !zeta, beta, k, n)
             for(j in 1:nreg){
                 ## Find residuals
                 R <- abs(X - W %*% H)
                 to.trim[[i]] <- order(R, decreasing = TRUE)[1 : round(gamma * n * p)]
                 ## to.trim[[i]] = which(rank(R) > round((1 - gamma) * n * p))
                 ## Update zeta
-                zeta <- matrix(TRUE, nrow = p, ncol = n)
-                zeta[to.trim[[i]]] <- FALSE
+                zeta <- matrix(FALSE, nrow = p, ncol = n)
+                zeta[to.trim[[i]]] <- TRUE
                 ## Refit H
-                H <- Nnls.trimH(W, X, zeta, beta, k, n)
+                H <- Nnls.trimH(W, X, !zeta, beta, k, n)
             }
             
             ##------Stage 2------##
             ## Given H, Fit W
-            W <- Nnls.trimW(H, X, zeta, alpha, k, p)
+            W <- Nnls.trimW(H, X, !zeta, alpha, k, p)
             for(j in 1:nreg) {
                 ## Find residuals
                 R <- abs(X - W %*% H)
                 ##to.trim[[i]] = which(rank(R) > round((1 - gamma) * n * p))
                 to.trim[[i]] <- order(R, decreasing=TRUE)[1 : round(gamma * n * p)]
                 ## Update zeta
-                zeta <- matrix(TRUE, nrow = p, ncol = n)
-                zeta[to.trim[[i]]] <- FALSE
+                zeta <- matrix(FALSE, nrow = p, ncol = n)
+                zeta[to.trim[[i]]] <- TRUE
                 ## Refit W
-                W <- Nnls.trimW(H, X, zeta, alpha, k, p)
+                W <- Nnls.trimW(H, X, !zeta, alpha, k, p)
                 J <- nmlz(W) # Find the normalizing matrix of W
                 W <- W %*% J; H = solve(J) %*% H
             }
-            obj[i] <- l2((X - W %*% H)[zeta]) + l2(W) + sum(colSums(abs(H))^2)
+            obj[i] <- l2((X - W %*% H)[!zeta]) + l2(W) + sum(colSums(abs(H))^2)
 
             ## Check convergence
+#             if(i > 1){
+#                 if(all(to.trim[[i]] == to.trim[[i - 1]]) &
+#                    sum((W - W.prev)^2) / sum(W.prev^2) < tol) break
+#             }else{}
             if(i > 1){
-                if(all(to.trim[[i]] == to.trim[[i - 1]]) &
-                   sum((W - W.prev)^2) / sum(W.prev^2) < tol) break
+              if(sum((W - W.prev)^2) / sum(W.prev^2) < tol) break
             }else{}
             W.prev <- W
         }
