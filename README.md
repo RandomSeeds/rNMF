@@ -1,7 +1,7 @@
-rnmf
+rNMF
 ====
 
-This is a development repo for the robust nonnegative matrix factorization R-package.
+This is a development repo for the robust nonnegative matrix factorization(rNMF) R-package.
 
 Package Vignette: http://hal.case.edu/~yifan/rNMF.html
 
