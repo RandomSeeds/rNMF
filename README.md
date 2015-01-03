@@ -1,7 +1,7 @@
 rnmf
 ====
 
-This is a develop repo for the robust nonnegative matrix factorization R-package.
+This is a development repo for the robust nonnegative matrix factorization R-package.
 
 To install, and load the package, do the following.
 
