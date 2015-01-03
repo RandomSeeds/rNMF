@@ -3,7 +3,7 @@ rNMF
 
 This is a development repo for the robust nonnegative matrix factorization(rNMF) R-package.
 
-Package Vignette: http://hal.case.edu/~yifan/rNMF.html
+Package vignette: http://hal.case.edu/~yifan/rNMF.html
 
 To install and load the package, do the following.
 
