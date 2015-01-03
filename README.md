@@ -5,7 +5,7 @@ This is a development repo for the robust nonnegative matrix factorization R-pac
 
 Package Vignette: http://hal.case.edu/~yifan/rNMF.html
 
-To install, and load the package, do the following.
+To install and load the package, do the following.
 
 In R console, install dependent packages:
 
