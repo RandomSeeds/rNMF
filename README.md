@@ -12,7 +12,9 @@ In R console, install dependent packages:
 ```
 install.packages(c("nnls", "knitr"))
 ```
-Download "rnmf_0.5.0.tar.gz". In R console, run the following line to install the package locally:
+Download "rnmf_0.5.0.tar.gz". 
+
+Run the following line to install the package locally:
 
 ```
 install.packages("/Path to the package/rnmf_0.5.0.tar.gz", repos = NULL, type = "source")
