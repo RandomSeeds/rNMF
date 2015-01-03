@@ -27,12 +27,12 @@ Load the package:
 library("rnmf")
 ```
 
-To see the help of the main function, run
+To see the help of the main function, run:
 
 ```
 ?rnmf
 ```
-To see an example, do
+To see an example, do:
 
 ```
 example(rnmf)
