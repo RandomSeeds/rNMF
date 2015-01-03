@@ -19,7 +19,7 @@ install.packages("/Path to the package/rnmf_0.5.0.tar.gz", repos = NULL, type = 
 ```
 RESTART R. 
 
-Run:
+Load the package:
 
 ```
 library("rnmf")
