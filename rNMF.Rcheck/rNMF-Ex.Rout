@@ -1,0 +1,131 @@
+
+R version 3.1.2 (2014-10-31) -- "Pumpkin Helmet"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-apple-darwin13.4.0 (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> pkgname <- "rNMF"
+> source(file.path(R.home("share"), "R", "examples-header.R"))
+> options(warn = 1)
+> library('rNMF')
+> 
+> base::assign(".oldSearch", base::search(), pos = 'CheckExEnv')
+> cleanEx()
+> nameEx("rnmf")
+> ### * rnmf
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: rnmf
+> ### Title: Robust penalized nonnegative matrix factorization (rNMF).
+> ### Aliases: rnmf
+> 
+> ### ** Examples
+> 
+> ## Load a clean single simulated tumor image.
+> data("tumor")
+> image(tumor) # look at the tumor image
+> dim(tumor) # it is a '70 by 70' matrix
+[1] 70 70
+> ## Add 5% corruptions.
+> tumor.corrupted <- tumor
+> set.seed(1)
+> tumor.corrupted[sample(1:4900, round(0.05 * 4900), replace = FALSE)] <- 1
+> ## Run rnmf with different settings
+> # No trimming
+> res.rnmf1 <- rnmf(X = tumor.corrupted, gamma = FALSE, my.seed = 1)
+  |                                                                              |                                                                      |   0%  |                                                                              |====                                                                  |   5%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%  |                                                                              |=====================                                                 |  30%  |                                                                              |========================                                              |  35%  |                                                                              |============================                                          |  40%  |                                                                              |================================                                      |  45%  |                                                                              |===================================                                   |  50%  |                                                                              |======================================                                |  55%  |                                                                              |==========================================                            |  60%
+Done. Time used: 
+   user  system elapsed 
+  0.129   0.004   0.164 
+No trimming.
+Input matrix dimension: 70 by 70
+Left matrix: 70 by 5. Right matrix: 5 by 70
+alpha = 0. beta = 0
+Number of max iterations = 20
+Number of iterations = 12
+> # 6 percent trimming, low dimension k = 5 (default)
+> res.rnmf2 <- rnmf(X = tumor.corrupted, tol = 0.001, gamma = 0.06, my.seed = 1)
+  |                                                                              |                                                                      |   0%  |                                                                              |====                                                                  |   5%  |                                                                              |=======                                                               |  10%  |                                                                              |==========                                                            |  15%  |                                                                              |==============                                                        |  20%  |                                                                              |==================                                                    |  25%
+Done. Time used:  
+   user  system elapsed 
+  0.160   0.004   0.280 
+
+ Trimming mode = "cell". Proportion trimmed: 0.06
+Input matrix dimension: 70 by 70
+Left matrix: 70 by 5. Right matrix: 5 by 70
+alpha = 0. beta = 0
+Number of max iterations = 20
+Number of iterations = 5
+> # add sparsity constraint of H (beta = 0.1) with k = 10, and the "smooth" variation.
+> res.rnmf3 <- rnmf(X = tumor.corrupted, k = 10, beta = 0.1,
++                   tol = 0.001, gamma = 0.06, my.seed = 1,
++                   variation = "smooth", maxit = 30)
+  |                                                                              |                                                                      |   0%  |                                                                              |==                                                                    |   3%  |                                                                              |=====                                                                 |   7%  |                                                                              |=======                                                               |  10%  |                                                                              |=========                                                             |  13%  |                                                                              |============                                                          |  17%  |                                                                              |==============                                                        |  20%  |                                                                              |================                                                      |  23%  |                                                                              |===================                                                   |  27%  |                                                                              |=====================                                                 |  30%  |                                                                              |=======================                                               |  33%  |                                                                              |==========================                                            |  37%  |                                                                              |============================                                          |  40%  |                                                                              |==============================                                        |  43%  |                                                                              |=================================                                     |  47%  |                                                                              |===================================                                   |  50%  |                                                                              |=====================================                                 |  53%  |                                                                              |========================================                              |  57%  |                                                                              |==========================================                            |  60%  |                                                                              |============================================                          |  63%  |                                                                              |===============================================                       |  67%  |                                                                              |=================================================                     |  70%  |                                                                              |===================================================                   |  73%  |                                                                              |======================================================                |  77%
+Done. Time used:  
+   user  system elapsed 
+  3.428   0.055   3.617 
+
+ Trimming mode = "smooth". Proportion trimmed: 0.06
+Input matrix dimension: 70 by 70
+Left matrix: 70 by 10. Right matrix: 10 by 70
+alpha = 0. beta = 0.1
+Number of max iterations = 30
+Number of iterations = 23
+> 
+> ## Show results:
+> par(mfrow = c(2,2), mar = c(2,2,2,2))
+> image(tumor.corrupted, main = "Corrupted tumor image", xaxt = "n", yaxt = "n")
+> image(res.rnmf1$fit, main = "rnmf (no trimming) fit", xaxt = "n", yaxt = "n")
+> image(res.rnmf2$fit, main = "rnmf (cell) fit 2", xaxt = "n", yaxt = "n")
+> image(res.rnmf3$fit, main = "rnmf (smooth) fit 3", xaxt = "n", yaxt = "n")
+> 
+> 
+> 
+> graphics::par(get("par.postscript", pos = 'CheckExEnv'))
+> cleanEx()
+> nameEx("see")
+> ### * see
+> 
+> flush(stderr()); flush(stdout())
+> 
+> ### Name: see
+> ### Title: Visualize vectorized images
+> ### Aliases: see
+> 
+> ### ** Examples
+> 
+> ## Load a build-in data set Symbols, a 5625 by 30 matrix containing 30 75x75
+> ## images.
+> data(Symbols)
+> see(Symbols, title = "Sample images of four symbols")
+> 
+> 
+> 
+> ### * <FOOTER>
+> ###
+> options(digits = 7L)
+> base::cat("Time elapsed: ", proc.time() - base::get("ptime", pos = 'CheckExEnv'),"\n")
+Time elapsed:  4.269 0.104 5.705 0 0 
+> grDevices::dev.off()
+null device 
+          1 
+> ###
+> ### Local variables: ***
+> ### mode: outline-minor ***
+> ### outline-regexp: "\\(> \\)?### [*]+" ***
+> ### End: ***
+> quit('no')

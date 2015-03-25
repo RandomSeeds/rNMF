@@ -2,7 +2,7 @@
 % Please edit documentation in R/rnmf.R
 \name{rnmf}
 \alias{rnmf}
-\title{Robust penalized nonnegative matrix factorization (rNMF).}
+\title{Robust Penalized Nonnegative Matrix Factorization (rNMF).}
 \usage{
 rnmf(X, k = 5, alpha = 0, beta = 0, maxit = 20, tol = 0.001,
   gamma = FALSE, ini.W = NULL, ini.zeta = NULL, my.seed = NULL,

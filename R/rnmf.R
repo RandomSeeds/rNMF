@@ -1,4 +1,4 @@
-#' Robust penalized nonnegative matrix factorization (rNMF).
+#' Robust Penalized Nonnegative Matrix Factorization (rNMF).
 #' 
 #' rNMF performs robust penalized nonnegative matrix factorizaion on a nonnegative matrix X to obtain low dimensional nonnegative matrices W and H, such that X ~ WH, while detecting and trimming different types of outliers in X.
 #'

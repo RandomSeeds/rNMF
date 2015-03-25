@@ -1,4 +1,4 @@
-#' An image of a corrupted face image.
+#' An Image of a Corrupted Face Image.
 #' 
 #' A 192 by 168 data matrix storing gray-scale pixel intensities of a corrupted face image. 
 #' The original image was taken from Yale Face Database B [Georghiades et al. 2001] 

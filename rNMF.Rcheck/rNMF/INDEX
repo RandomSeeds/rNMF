@@ -1,0 +1,8 @@
+Symbols                 30 images containing 4 different symbols.
+Symbols_c               30 images containing 4 different symbols with
+                        corruptions.
+face                    An image of a corrupted face image.
+rnmf                    Robust penalized nonnegative matrix
+                        factorization (rNMF).
+see                     Visualize vectorized images
+tumor                   An image of 3 simulated tumors.

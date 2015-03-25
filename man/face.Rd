@@ -3,7 +3,7 @@
 \docType{data}
 \name{face}
 \alias{face}
-\title{An image of a corrupted face image.}
+\title{An Image of a Corrupted Face Image.}
 \format{A data matrix containing 192 rows and 168 columns.}
 \description{
 A 192 by 168 data matrix storing gray-scale pixel intensities of a corrupted face image.

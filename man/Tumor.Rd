@@ -3,7 +3,7 @@
 \docType{data}
 \name{tumor}
 \alias{tumor}
-\title{An image of 3 simulated tumors.}
+\title{An Image of 3 Simulated Tumors.}
 \format{A 70 by 70 numeric matrix.}
 \description{
 A 70 by 70 data matrix storing pixel intensities of three tumors that are normalized to 0 to 1.

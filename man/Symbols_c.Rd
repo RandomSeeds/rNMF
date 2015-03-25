@@ -3,7 +3,7 @@
 \docType{data}
 \name{Symbols_c}
 \alias{Symbols_c}
-\title{30 images containing 4 different symbols with corruptions.}
+\title{30 Images Containing 4 Different Symbols with Corruptions.}
 \format{A 5625 by 30 numeric matrix.}
 \description{
 A 5625 by 30 matrix. Each column stores vectorized pixels of a 75 by 75 image.

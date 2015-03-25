@@ -2,7 +2,7 @@
 % Please edit documentation in R/see.R
 \name{see}
 \alias{see}
-\title{Visualize vectorized images}
+\title{Visualize Vectorized Images}
 \usage{
 see(X, title = "Image", col = "heat", input = "multi", layout = "auto",
   ...)

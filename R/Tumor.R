@@ -1,4 +1,4 @@
-#' An image of 3 simulated tumors.
+#' An Image of 3 Simulated Tumors.
 #' 
 #' A 70 by 70 data matrix storing pixel intensities of three tumors that are normalized to 0 to 1. 
 #' 
