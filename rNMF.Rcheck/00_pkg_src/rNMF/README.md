@@ -1,31 +1,30 @@
 rNMF
 ====
 
-This is a development repo for the robust nonnegative matrix factorization(rNMF) R-package.
+This is a development repo for the robust nonnegative matrix factorization (rNMF) R-package. rNMF decomposes a high dimensional nonnegative data set with potential corruptions to a product of two low rank matrices with a separate outlier set. 
+Package vignette: http://cran.r-project.org/web/packages/rNMF/vignettes/rNMF.html
 
-Package vignette: http://hal.case.edu/~yifan/rNMF.html
-
-To install and load the package, do the following.
-
-In R console, install dependent packages:
+### Installation
+To install and load the published package from CRAN, run the following in R:
 
 ```
-install.packages(c("nnls", "knitr"))
+install.packages("rNMF")
+library(rNMF)
 ```
-Download "rnmf_0.5.0.tar.gz". 
 
-Run the following line to install the package locally:
-
-```
-install.packages("/Path to the package/rnmf_0.5.0.tar.gz", repos = NULL, type = "source")
-```
-RESTART R. 
-
-Load the package:
+To install the develop version, run the following in R:
 
 ```
-library("rnmf")
+install.packages("devtools")
+library(devtools)
+install_github("RandomSeeds/rNMF")
+library(rNMF)
 ```
+
+### Use the package
+The vignette of the package is at
+
+http://cran.r-project.org/web/packages/rNMF/vignettes/rNMF.html
 
 To see the help of the main function, run:
 
